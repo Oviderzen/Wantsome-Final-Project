@@ -1,0 +1,5 @@
+#### This should be build locally by vagrant 
+.vagrant
+#### Check setup.sh to create the keys
+keys/id_rsa
+keys/id_rsa.pub

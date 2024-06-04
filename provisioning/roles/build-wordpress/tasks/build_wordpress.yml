@@ -1,0 +1,9 @@
+---
+- name: Build WordPress Container
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: build_wordpress
+      docker_image:
+        name: ovi_wordpress:latest
+        path: E:\Wantsome\Final Project\Dockerfile_wordpress

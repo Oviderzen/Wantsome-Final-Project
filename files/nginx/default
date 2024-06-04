@@ -1,0 +1,36 @@
+# Define upstream servers for app1 and app2
+upstream wordpress_servers {
+    server app1:80;
+    server app2:80;
+}
+
+upstream jenkins {
+    server 192.168.10.11:8080;
+}
+
+server {
+    listen 80;
+    server_name localhost;
+
+    location /wordpress {
+        # Pass requests to the upstream group
+        proxy_pass http://wordpress_servers;
+        
+        # Set proxy headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /jenkins {
+        # Proxy requests to the Jenkins container
+        proxy_pass http://jenkins;
+
+        # Set proxy headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

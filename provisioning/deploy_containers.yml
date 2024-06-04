@@ -1,0 +1,74 @@
+---
+- name: Deploy Containers on Environment VM
+  hosts: environment
+  become: yes
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+  tasks:
+    - name: Pull MySQL Docker image
+      docker_image:
+        name: oviderzen/ovi_mysql:0.0.1
+        state: present
+        source: pull
+    
+    - name: Pull Nginx Docker image
+      docker_image:
+        name: oviderzen/ovi_nginx:0.0.1
+        state: present
+        source: pull
+    
+    - name: Pull WordPress Docker image
+      docker_image:
+        name: oviderzen/ovi_wordpress:0.0.1
+        state: present
+        source: pull
+    
+    - name: Create Docker network
+      docker_network:
+        name: my_network
+        state: present
+    
+    - name: Deploy MySQL container
+      docker_container:
+        name: db
+        hostname: db
+        image: oviderzen/ovi_mysql:0.0.1
+        ports:
+          - "3306:3306"
+        networks:
+          - name: my_network
+        state: started
+
+    - name: Deploy WordPress container
+      docker_container:
+        name: app1
+        hostname: app1
+        image: oviderzen/ovi_wordpress:0.0.1
+        ports:
+          - "8080:80"
+        networks:
+          - name: my_network
+        state: started
+
+    - name: Deploy WordPress container
+      docker_container:
+        name: app2
+        hostname: app2
+        image: oviderzen/ovi_wordpress:0.0.1
+        ports:
+          - "8080:80"
+        networks:
+          - name: my_network
+        state: started
+
+    - name: Deploy Nginx container
+      docker_container:
+        name: nginx
+        hostname: lb
+        image: oviderzen/ovi_nginx:0.0.1
+        ports:
+          - "80:80"
+        networks:
+          - name: my_network
+        state: started
+    

@@ -1,0 +1,20 @@
+- name: Upgrade all packages
+  hosts: ci-cd
+  become: true
+  gather_facts: true
+  strategy: free
+  # serial: 100%
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+  roles:
+    - update-packages
+
+# - name: Install Jenkins
+#   hosts: ci-cd
+#   become: true
+#   gather_facts: true
+#   strategy: free
+#   vars:
+#     ansible_python_interpreter: "/usr/bin/python3"
+#   roles:
+#    - install-jenkins

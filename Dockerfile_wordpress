@@ -1,0 +1,37 @@
+FROM ubuntu:latest
+
+ENV DEBIAN_FRONTEND=noninteractive 
+
+ENV WORDPRESS_LOCALE: en_US
+ENV WORDPRESS_DB_HOST: db
+ENV WORDPRESS_DB_NAME: wordpress
+ENV WORDPRESS_DB_USER: wpadmin
+ENV WORDPRESS_DB_PASSWORD: password
+ENV WORDPRESS_WEBSITE_TITLE: "Wantsome is awesome"
+ENV WORDPRESS_WEBSITE_URL: "http://localhost/wordpress"
+ENV WORDPRESS_WEBSITE_URL_WITHOUT_HTTP: "localhost/wordpress"
+ENV WORDPRESS_WEBSITE_POST_URL_STRUCTURE: "/%year%/%monthnum%/%day%/%postname%/"
+ENV WORDPRESS_ADMIN_USER: "admin"
+ENV WORDPRESS_ADMIN_PASSWORD: "admin"
+ENV WORDPRESS_ADMIN_EMAIL: "test@example.com"
+
+RUN apt update && \
+    apt install wget -y && \
+    apt install unzip -y && \
+    apt install -y ghostscript php php-bcmath php-curl php-imagick php-intl php-json php-mbstring php-mysql php-xml php-zip && \
+    apt install curl -y
+    
+RUN mkdir -p /var/www/html && \
+    chmod -R 777 /var/www/html
+
+RUN wget "https://wordpress.org/latest.zip" -O latest.zip && \
+    unzip latest.zip -d /var/www/html/ && \
+    apt remove unzip -y && \
+    rm -f latest.zip && \
+    apt clean
+
+
+COPY files/wordpress/wp-config.php /var/www/html/wordpress
+
+EXPOSE 80
+CMD ["php", "-S", "0.0.0.0:80", "-t", "/var/www/html"]

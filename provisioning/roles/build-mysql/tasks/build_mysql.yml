@@ -1,0 +1,9 @@
+---
+- name: Build Mysql Container
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: build_mysql
+      docker_image:
+        name: ovi_mysql:latest
+        path: E:\Wantsome\Final Project\Dockerfile_mysql

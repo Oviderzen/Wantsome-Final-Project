@@ -1,0 +1,9 @@
+---
+- name: Build Nginx Container
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: build_nginx
+      docker_image:
+        name: ovi_nginx:latest
+        path: E:\Wantsome\Final Project\Dockerfile_nginx

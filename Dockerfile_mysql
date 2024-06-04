@@ -1,0 +1,10 @@
+FROM mysql:latest
+
+ENV MYSQL_ROOT_PASSWORD password
+ENV MYSQL_DATABASE wordpress
+ENV MYSQL_USER wpadmin
+ENV MYSQL_PASSWORD password
+
+EXPOSE 8889:3306
+
+COPY files/mysql/mysqld.cnf /etc/mysql/

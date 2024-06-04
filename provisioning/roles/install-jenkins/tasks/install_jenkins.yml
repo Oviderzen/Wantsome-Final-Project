@@ -1,0 +1,9 @@
+---
+- name: Build Jenkins Container
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: install-jenkins
+      docker_image:
+        name: ovi_jenkins:latest
+        path: E:\Wantsome\Final Project\Dockerfile_jenkins

@@ -1,0 +1,92 @@
+version: '3'
+
+networks:
+  my_network:
+
+services:
+
+  db:
+    hostname: db
+    image: oviderzen/mysql-image:latest
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wpadmin
+      MYSQL_PASSWORD: password
+    ports:
+      - 8889:3306
+    networks:
+      - my_network
+
+  app1:
+    hostname: app1
+    image: oviderzen/wordpress-image:latest
+    container_name: app1
+    ports:
+      - 8900:80
+    depends_on:
+      - db
+    environment:
+      WORDPRESS_LOCALE: en_US
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wpadmin
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_WEBSITE_TITLE: "Wantsome is Awesome"
+      WORDPRESS_WEBSITE_URL: "http://localhost/wordpress"
+      WORDPRESS_WEBSITE_URL_WITHOUT_HTTP: "localhost/wordpress"
+      WORDPRESS_WEBSITE_POST_URL_STRUCTURE: "/%year%/%monthnum%/%day%/%postname%/"
+      WORDPRESS_ADMIN_USER: "admin"
+      WORDPRESS_ADMIN_PASSWORD: "admin"
+      WORDPRESS_ADMIN_EMAIL: "test@example.com"
+    networks:
+      - my_network
+
+  app2:
+    hostname: app2
+    image: oviderzen/wordpress-image:latest
+    container_name: app2
+    ports:
+      - 8887:80
+    depends_on:
+      - db
+    environment:
+      WORDPRESS_LOCALE: en_US
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wpadmin
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_WEBSITE_TITLE: "Wantsome is awesome"
+      WORDPRESS_WEBSITE_URL: "http://localhost/wordpress"
+      WORDPRESS_WEBSITE_URL_WITHOUT_HTTP: "localhost/wordpress"
+      WORDPRESS_WEBSITE_POST_URL_STRUCTURE: "/%year%/%monthnum%/%day%/%postname%/"
+      WORDPRESS_ADMIN_USER: "admin"
+      WORDPRESS_ADMIN_PASSWORD: "admin"
+      WORDPRESS_ADMIN_EMAIL: "test@example.com"
+    networks:
+      - my_network
+
+  lb:
+    hostname: lb
+    image: oviderzen/nginx-image
+    container_name: lb
+    ports:
+      - "80:80"
+    depends_on:
+      - app1
+      - app2
+    networks:
+      - my_network
+
+  # jenkins:
+  #   hostname: jenkins
+  #   image: ovi_jenkins:0.0.1
+  #   container_name: jenkins
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.jenk.secondtry
+  #   ports:
+  #    - "8080:8080"
+  #   networks:
+  #     - my_network

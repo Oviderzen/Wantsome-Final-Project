@@ -1,0 +1,10 @@
+- name: Upgrade all packages
+  hosts: environment
+  become: true
+  gather_facts: true
+  strategy: free
+  # serial: 100%
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+  roles:
+    - update-packages
